@@ -8,8 +8,8 @@ class ConnectionManager {
         console.log('port', port);
         this.clientSocket = io('http://' + host + ':' + port);
         this.clientSocket.on('connect', () => {
-            cb(true);
             this.registerEvents();
+            cb(true);
         })
     }
 
@@ -17,12 +17,19 @@ class ConnectionManager {
         this.clientSocket.on('event', (data) => {
             switch(data.type) {
                 case "initialize_client":
-                    //this.playerManager.initialize(data.x, data.y, data.connector, data.area, true);
-                //  break;
-                case "new_game_state":
-                    //   this.playerManager.updatePlayersFromGameState(data.gameState);
+                    this.playerManager.initializeClient(data.x, data.y, data.id, data.areaIndex, data.pid, this.clientSocket);
+                    break;
+                case "state_update":
+                    this.playerManager.updatePlayersFromGameState(data.gameState);
                     break;
             }
         })
+    }
+
+    sendInputs(pressingUp, pressingDown, pressingRight, pressingLeft) {
+        this.clientSocket.emit('input', { pressingUp, pressingDown, pressingRight, pressingLeft });
+    }
+
+    sendMessage() {
     }
 }

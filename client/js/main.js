@@ -63,6 +63,7 @@ connectButton.on('mouseout', () => {
     connectButton.drawRect(175, 210, 150, 80);
     connectButton.scale.set(1);
 });
+
 var connecting = false;
 var loadingButton = new PIXI.Graphics();
 loadingButton.beginFill(0x3f78d9);
@@ -78,8 +79,6 @@ connectButton.on('mousedown', () => {
             connectText.text = "FAILED TO CONNECT";
             return
         }
-        console.log('connector info we got from request was', connectorInfo)
-
         connectionManager.connect(connectorInfo.HOST, connectorInfo.PORT, function(connected) {
             if(!connected) {
                 connecting = false;
@@ -158,4 +157,9 @@ animate();
 function animate() {
     requestAnimationFrame(animate);
     renderer.render(mainStage);
+    update();
+}
+
+function update() {
+    playerManager.update();
 }
